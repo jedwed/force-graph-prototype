@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 // import ForceGraph from "./ForceGraph";
 import * as d3 from "d3";
-import { SimulationNodeDatum } from "d3";
 
 function Canvas() {
   const svgRef = useRef<SVGSVGElement>(null);
