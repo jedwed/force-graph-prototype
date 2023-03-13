@@ -11,7 +11,12 @@ body {
   /* stroke-opacity: 0.6; */
 }
 
-.nodes circle {
-  stroke: #fff;
-  stroke-width: 1.5px;
+.labels text {
+  color: #000;
+  font-family: "Fira Code";
 }
+
+/* .nodes circle { */
+/*   stroke: #fff; */
+/*   stroke-width: 1.5px; */
+/* } */

@@ -4,8 +4,8 @@ import * as d3 from "d3";
 
 function Canvas() {
   const svgRef = useRef<SVGSVGElement>(null);
-  useEffect(() => {
-    const nodes = [
+  const graph = {
+    nodes: [
       { id: "0" },
       { id: "1" },
       { id: "2" },
@@ -13,14 +13,17 @@ function Canvas() {
       { id: "4" },
       { id: "5" },
       { id: "6" },
-    ];
-    const edges = [
+    ],
+    edges: [
       { source: "0", target: "1" },
       { source: "1", target: "3" },
-      { source: "2", target: "5" },
       { source: "6", target: "3" },
       { source: "5", target: "0" },
-    ];
+      { source: "1", target: "4" },
+      { source: "2", target: "1" },
+    ],
+  };
+  useEffect(() => {
     const svg = d3.select(svgRef.current);
     const width = +svg.attr("width");
     const height = +svg.attr("height");
@@ -36,7 +39,7 @@ function Canvas() {
       .append("g")
       .attr("class", "links")
       .selectAll("line")
-      .data(edges)
+      .data(graph.edges)
       .enter()
       .append("line")
       .attr("stroke-width", 4);
@@ -44,38 +47,38 @@ function Canvas() {
       .append("g")
       .attr("class", "nodes")
       .selectAll("circle")
-      .data(nodes)
+      .data(graph.nodes)
       .enter()
       .append("circle")
-      .attr("r", 10)
+      .attr("r", 15)
       .attr("fill", "green");
+    // .enter()
+    // .append("text")
+    // .text((node) => node.id);
+    // .enter();
+    const label = svg
+      .append("g")
+      .attr("class", "labels")
+      .selectAll("text")
+      .data(graph.nodes)
+      .enter()
+      .append("text")
+      .text((node) => node.id);
 
-    simulation.nodes(nodes).on("tick", ticked);
-    simulation.force("link").links(edges);
+    simulation.nodes(graph.nodes).on("tick", ticked);
+    simulation.force("link").links(graph.edges);
 
     function ticked() {
       link
-        .attr("x1", function (d) {
-          return d.source.x;
-        })
-        .attr("y1", function (d) {
-          return d.source.y;
-        })
-        .attr("x2", function (d) {
-          return d.target.x;
-        })
-        .attr("y2", function (d) {
-          return d.target.y;
-        });
-      node
-        .attr("cx", function (d) {
-          return d.x;
-        })
-        .attr("cy", function (d) {
-          return d.y;
-        });
+        .attr("x1", (d) => d.source.x)
+        .attr("y1", (d) => d.source.y)
+        .attr("x2", (d) => d.target.x)
+        .attr("y2", (d) => d.target.y);
+      label.attr("x", (d) => d.x).attr("y", (d) => d.y);
+      node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
     }
-  }, []);
+    return () => {};
+  }, [graph]);
   return <svg ref={svgRef} height="1000" width="1000" />;
 }
 
